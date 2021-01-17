@@ -1,5 +1,6 @@
 from flask import jsonify, request, Flask
 from catalog import get_products, create_product
+from flask_cors import CORS
 
 app = Flask(__name__)
 
@@ -13,12 +14,12 @@ def list_all_products():
 	
 	if request.method == 'POST':
 		data = request.get_json()
-		create_product(
-			data['sku'],
+		new_sku = create_product(
+			None,
 			data['title'],
 			data['long_description'],
 			data['price_euro'])
-		return jsonify({ "status": "ok"})
+		return jsonify({"status": "ok", "sku": new_sku})
 
 
 @app.route('/hello')

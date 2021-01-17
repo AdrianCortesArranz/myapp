@@ -22,5 +22,15 @@ def get_products():
     return response
 
 def create_product(sku, title, long_description, price_euro):
-	''' Insertar todo esto en una bbdd '''
-	print(f"Crear sku={sku} y title={title}", file=sys.stderr)
+    db = get_db()
+
+    cursor = db.cursor()
+
+    sql = """INSERT INTO productos(title, long_description, price)
+             VALUES(%s, %s, %s) RETURNING sku;"""
+
+    cursor.execute(sql, (title, long_description, price_euro,))
+    db.commit()
+    sku = cursor.fetchone()[0]
+
+    return sku
